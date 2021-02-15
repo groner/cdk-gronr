@@ -13,7 +13,7 @@ export class GronrStack extends cdk.Stack {
 
   addAdmin(name: string) {
     const user = new iam.User(
-      this, 'user', {
+      this, `user=${name}`, {
         userName: name,
       });
     user.addManagedPolicy(
@@ -22,14 +22,14 @@ export class GronrStack extends cdk.Stack {
     this.makeAdmin(user);
   }
 
-  makeAdmin(name: string | iam.User) {
-    const user = typeof name === 'string'
-      ? iam.User.fromUserName(this, 'user', name)
-      : name;
+  makeAdmin(user_or_name: string | iam.User) {
+    const user = typeof user_or_name === 'string'
+      ? iam.User.fromUserName(this, `user=${user_or_name}`, user_or_name)
+      : user_or_name;
 
     const role = new iam.Role(
-      this, 'sudoer', {
-        roleName: `sudo-${name}`,
+      this, `role=sudo-${user.userName}`, {
+        roleName: `sudo-${user.userName}`,
         assumedBy: new iam.ArnPrincipal(user.userArn)
           .withConditions({
             "Bool": {
