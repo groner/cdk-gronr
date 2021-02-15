@@ -3,6 +3,8 @@ import * as cdk from '@aws-cdk/core';
 import * as route53 from '@aws-cdk/aws-route53';
 
 export class GronrStack extends cdk.Stack {
+  users: Record<string, iam.User> = {};
+  roles: Record<string, iam.Role> = {};
 
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -15,9 +17,6 @@ export class GronrStack extends cdk.Stack {
     dnsUpdateUser.addToPolicy(
       zoneStack.getUpdatePolicyStatement());
   }
-
-  users: Record<string, iam.User> = {};
-  roles: Record<string, iam.Role> = {};
 
   addAdmin(name: string) {
     const user = new iam.User(
