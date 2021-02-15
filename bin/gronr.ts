@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
-import { BaseStack } from '../lib/base-stack';
+import { GronrStack } from '../lib/gronr-stack';
 
 const app = new cdk.App();
-const gronr = new BaseStack(app, 'GronrStack');
+const gronr = new GronrStack(app, 'GronrStack');
 
 const adminUser = gronr.node.tryGetContext('gronr/admin');
 if (adminUser)

@@ -1,9 +1,7 @@
 {
-  "name": "base",
+  "name": "@groner/cdk-gronr",
   "version": "0.1.0",
-  "bin": {
-    "base": "bin/base.js"
-  },
+  "private": true,
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
