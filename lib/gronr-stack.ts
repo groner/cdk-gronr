@@ -12,6 +12,13 @@ export class GronrStack extends cdk.Stack {
     // The code that defines your stack goes here
     const zoneStack = new GronrOrgZoneStack(this, 'gronr-org-zone-stack', props);
     this.addDependency(zoneStack);
+    zoneStack.addDomainKey('google',
+      'v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApyDSTA7O'+
+      'Io4qQtvPK4xtR11hlDvS0pxejFd9kTr3PJcuCUXS/ENDB1nlsB9FnVKf7ODw9aBVqG7586'+
+      'GGeK6fRdWZmAFe32QTxEK4jOaDFGJMR/IB8hnl0sPD7FxHpOqnE4F0X1nMp5vj7a4XZ52i'+
+      'PFkMe5lQTdz90TX37LUVWKCkAYmZ6EU63l8DLgBDClloDZPqsIWLQesZSehOVQbYEhwMA5'+
+      '/BWVe/qbwwy3MOdl/ZY4Xh36XG+NEuwH4IDZWRZUkzmEYVHuHC7JWFngdVbxes/UZ2eIDz'+
+      'oqnSfPVtKK7oGNRZ9shlqOomKWOHOedJlkTYMHL4O6VPVtLGM3X14QIDAQAB');
 
     const dnsUpdateUser = this.addDNSUpdateUser();
     dnsUpdateUser.addToPolicy(
@@ -105,10 +112,12 @@ export class GronrOrgZoneStack extends cdk.Stack {
       ]});
   }
 
-  addDomainKey(selector: string, rrValue: string, subdomain: string='') {
-    const name = `${selector}._domainkey.${subdomain}`;
+  addDomainKey(selector: string, rrValue: string, subdomain?: string) {
+    const name = subdomain
+      ? `${selector}._domainkey.${subdomain}`
+      : `${selector}._domainkey`;
 
-    new route53.TxtRecord(this, 'dkim=${name}', {
+    new route53.TxtRecord(this, `dkim=${name}`, {
       zone: this.zone,
       recordName: name,
       ttl: cdk.Duration.days(1),
